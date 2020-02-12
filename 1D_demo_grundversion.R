@@ -33,7 +33,7 @@ perform_avalanches <- function(lattice){
 lattice_size <- 80
 lattice <- rep(0L, lattice_size)  # main lattice; will contain the z-values
 time_steps <- 10000
-z_crit <- 4
+z_crit <- 1
 
   
   
@@ -57,8 +57,8 @@ for(t in 1:time_steps){
   }
   
   
-  #barplot(lattice)
-  #Sys.sleep(1)
+  barplot(lattice)
+  Sys.sleep(1)
   
   ## final avalance relaxation
   if(t == time_steps){
