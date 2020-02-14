@@ -33,7 +33,7 @@ perform_avalanches <- function(lattice){
 #### algorithm  
 lattice_size <- 20
 
-time_steps <- 4000
+time_steps <- 3500
 z_crit_max <- 6
 color <- c("green4","blue4","red4","orange4","pink4")
 
