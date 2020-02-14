@@ -49,10 +49,10 @@ perform_avalanches <- function(lattice){
 }
   
 #### algorithm  
-lattice_size <- 20
+lattice_size <- 30
 lattice <- rep(0L, lattice_size)  # main lattice; will contain the z-values
-time_steps <- 1e6
-z_crit <- 3
+time_steps <- 150000
+z_crit <- 5
 
 s_values <- c()  # list of avalanche sizes
 t_values <- c()  # list of avalance lifetimes
@@ -92,8 +92,5 @@ for(tau in 1:time_steps){
 
 hist(s_values, breaks = 20)
 hist(t_values)
-hist(l_values)
-min(s_values)
-
-sum((s_values - t_values) )
+hist(l_values, right = FALSE)  # right = F wichtig! sonst 0 und 1 in  einem bin
 
