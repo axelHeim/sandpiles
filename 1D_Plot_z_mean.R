@@ -8,7 +8,7 @@ perform_avalanches <- function(lattice){
   while (any((lattice > z_crit))) {
     tmp_lattice  <- rep(0L, lattice_size)    # auxilliary lattice for calculation of avalanche effects
     
-    for(i in 1:lattice_size){ # skip first entry because of bound. cond.
+    for(i in 1:lattice_size){ 
       
       if(lattice[i] > z_crit){
         if(i != lattice_size){
