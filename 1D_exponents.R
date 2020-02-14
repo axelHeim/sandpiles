@@ -6,17 +6,20 @@
 ### functions:
 
 perform_avalanches <- function(lattice){
+  #print("avalanche FUNC:")
   avalanche_lifetime <- 0
   avalanche_size <- 0
   avalance_lin_size <- 0
   r_0 <- which(lattice > z_crit) # initial pos. of avalanche
-
+  #print("R_0")
+  #print(r_0)
   
   while (any((lattice > z_crit))) {
     avalanche_lifetime <- avalanche_lifetime + 1
     avalanche_size <- avalanche_size + sum(as.numeric((lattice > z_crit)))
-    avalance_lin_size <- max(avalance_lin_size, max(1, which(lattice > z_crit) - r_0))
-    
+    avalance_lin_size <- max(avalance_lin_size, (which(lattice > z_crit) - r_0))
+    #print("actual distance")
+    #print(which(lattice > z_crit) - r_0)
     
     tmp_lattice  <- rep(0L, lattice_size)    # auxilliary lattice for calculation of avalanche effects
     
@@ -46,10 +49,10 @@ perform_avalanches <- function(lattice){
 }
   
 #### algorithm  
-lattice_size <- 30
+lattice_size <- 20
 lattice <- rep(0L, lattice_size)  # main lattice; will contain the z-values
-time_steps <- 150000
-z_crit <- 5
+time_steps <- 1e6
+z_crit <- 3
 
 s_values <- c()  # list of avalanche sizes
 t_values <- c()  # list of avalance lifetimes
@@ -63,15 +66,12 @@ for(tau in 1:time_steps){
   
   tmp <- perform_avalanches(lattice)
   lattice <- tmp[1:lattice_size]
-  if(tmp[lattice_size + 1] > 0){
+  if(tmp[lattice_size + 1] > 0){   # this cond. checks whether there was an avalanche at all
     s_values[[length(s_values) + 1]] <- tmp[lattice_size + 1]  
-  }
-  if(tmp[lattice_size + 2] > 0){
-    t_values[[length(t_values) + 1]] <- tmp[lattice_size + 2]  
-  }
-  if(tmp[lattice_size + 3] > 0){
+    t_values[[length(t_values) + 1]] <- tmp[lattice_size + 2] 
     l_values[[length(l_values) + 1]] <- tmp[lattice_size + 3]  
   }
+  
   
     
   ## randomly perturb system via conservative perturbation
@@ -90,10 +90,10 @@ for(tau in 1:time_steps){
 }
 
 
-hist(s_values)
+hist(s_values, breaks = 20)
 hist(t_values)
 hist(l_values)
+min(s_values)
 
-
-
+sum((s_values - t_values) )
 
