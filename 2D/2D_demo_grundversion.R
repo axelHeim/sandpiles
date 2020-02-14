@@ -4,8 +4,11 @@
 ### functions:
 
 perform_avalanches <- function(lattice){
-  plot(lattice)
-  Sys.sleep(1)
+  if(plotting == TRUE){
+    plot(lattice,  breaks=c(0, 1, 2,3,4,5,6), digits = 0)
+    Sys.sleep(1)
+    
+  }
   
   
   while (any((lattice > z_crit))) {
@@ -47,21 +50,25 @@ perform_avalanches <- function(lattice){
       }}}
     ## add the tmp_lattice to lattice in order to update the lattice
     lattice <- lattice + tmp_lattice
+  
+    if(plotting == TRUE){
+      plot(lattice,  breaks=c(0, 1, 2,3,4,5,6), digits = 0)
+      Sys.sleep(1)
+      
+    }
     
-    plot(lattice)
-    Sys.sleep(1)
-    
-  }
+  
+    }
   return (lattice)
 }
 
 
 #### algorithm  
 library(plot.matrix)
-lattice_size <- 10
-z_crit <- 5       # avalanche condtion
-time_steps <- 10
-
+lattice_size <- 6
+z_crit <- 3      # avalanche condtion
+time_steps <- 1e8  # 3*1e7 lasts > 25min with lattice_size=10
+plotting <- F
 
 lattice <- matrix(0L, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
 
@@ -91,9 +98,14 @@ for(t in 1:time_steps){
   if(t == time_steps){
     lattice <- perform_avalanches(lattice)
   }
+  
+  if(t %% 1e5 == 0){
+    print("% steps done:")
+    print(t/time_steps)
+  }
 }
 
+plot(lattice,  breaks=c(0, 1, 2,3,4,5,6), digits = 0)
+sum(as.numeric(lattice == z_crit))/(lattice_size**2)
+mean(lattice)
 
-plot(lattice)
-max(lattice)
-min(lattice)
