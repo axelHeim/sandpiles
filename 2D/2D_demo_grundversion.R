@@ -65,9 +65,9 @@ perform_avalanches <- function(lattice){
 
 #### algorithm  
 library(plot.matrix)
-lattice_size <- 6
-z_crit <- 3      # avalanche condtion
-time_steps <- 1e8  # 3*1e7 lasts > 25min with lattice_size=10
+lattice_size <- 9
+z_crit <- 8      # avalanche condtion
+time_steps <- 1e6  # 3*1e7 lasts > 25min with lattice_size=10
 plotting <- F
 
 lattice <- matrix(0L, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
@@ -101,11 +101,11 @@ for(t in 1:time_steps){
   
   if(t %% 1e5 == 0){
     print("% steps done:")
-    print(t/time_steps)
+    print(t/time_steps * 100)
   }
 }
 
-plot(lattice,  breaks=c(0, 1, 2,3,4,5,6), digits = 0)
+plot(lattice,  breaks=c(0, 1, 2,3,4,5,6,7,8,9), digits = 0)
 sum(as.numeric(lattice == z_crit))/(lattice_size**2)
 mean(lattice)
 

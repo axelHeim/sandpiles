@@ -35,7 +35,7 @@ lattice_size <- 20
 
 time_steps <- 3500
 z_crit_max <- 6
-color <- c("green4","blue4","red4","orange4","pink4")
+color <- c("green4","blue4","red2","orange2","pink2")
 
 
 for(z_crit in z_crit_max:1){
@@ -81,12 +81,10 @@ legend(0, 6, legend=c(expression(paste('z'['crit'], ' = 6')),
                       expression(paste('z'['crit'], ' = 3')),
                       expression(paste('z'['crit'], ' = 2')),
                       expression(paste('z'['crit'], ' = 1'))),
-       col=c("black","pink4","orange4","red4","blue4","green4"), lty=1:1, cex=0.75)
+       col=c("black","pink2","orange2","red2","blue4","green4"), lty=1:1, cex=0.75)
 
 
 
 ## PLOTS
 # barplot(lattice)
 # plot(z_means, type = "l")
-
-8:2
