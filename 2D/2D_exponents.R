@@ -72,7 +72,7 @@ perform_avalanches <- function(lattice){
 
 #### algorithm  
 library(plot.matrix)
-lattice_size <- 25
+lattice_size <- 40
 z_crit <- 8      # avalanche condtion
 time_steps <- 5*1e6  # 3*1e7 lasts > 25min with lattice_size=10
 
@@ -126,9 +126,11 @@ for(t in 1:time_steps){
   
 }
 
+## plotting
+
 
 table(s_values)
-hist(s_values)
+hist(s_values, probability = TRUE)
 max(s_values)
 
 table(t_values)
@@ -146,6 +148,33 @@ plot(density(l_values, bw= 0.3), log = 'xy')
 
 
 
-hist(l_values, prob=TRUE, col="grey")# prob=TRUE for probabilities not counts
-#lines(density(l_values), col="blue", lwd=2) # add a density estimate with defaults
-lines(density(l_values, adjust=5), lty="dotted", col="darkgreen", lwd=2) 
+## fitting densities
+#library(MASS)
+#library(fitdistrplus)
+
+
+### t
+t_dataFrame <- as.data.frame(table(t_values))
+t_dataFrame$log10_T <- log10(as.numeric(as.character(t_dataFrame$t_values))) # transformation necessary because these values were "factors" before
+t_dataFrame$prob <- t_dataFrame$Freq / length(t_values)
+t_dataFrame$log10_prob  <- log10(t_dataFrame$prob)
+
+linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame) # , subset=0:4
+summary(linearMod_t)
+
+plot(t_dataFrame$log10_T, t_dataFrame$log10_prob) # , xlim = c(0,4)
+abline(linearMod_t)
+
+
+### s
+s_dataFrame <- as.data.frame(table(s_values))
+s_dataFrame$log10_s <- log10(as.numeric(as.character(s_dataFrame$s_values))) # transformation necessary because these values were "factors" before
+s_dataFrame$prob <- s_dataFrame$Freq / length(s_values)
+s_dataFrame$log10_prob  <- log10(s_dataFrame$prob)
+
+linearMod_s <- lm(log10_prob ~ log10_s, data=s_dataFrame) # , subset=0:4
+summary(linearMod_s)
+
+plot(s_dataFrame$log10_s, s_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
+abline(linearMod_s)
+
