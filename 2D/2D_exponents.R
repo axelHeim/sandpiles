@@ -136,10 +136,16 @@ hist(t_values)
 max(t_values)
 
 table(l_values)
-hist(l_values)  # right = F wichtig! sonst 0 und 1 in  einem bin
+hist(l_values)  
 max(l_values)
 
 plot(density(s_values, from = 1, to = 600), log = 'xy')
 plot(density(t_values, bw = .5, from = 1, to = 100), log = 'xy')
 plot(density(l_values, bw= 0.3), log = 'xy')
 
+
+
+
+hist(l_values, prob=TRUE, col="grey")# prob=TRUE for probabilities not counts
+#lines(density(l_values), col="blue", lwd=2) # add a density estimate with defaults
+lines(density(l_values, adjust=5), lty="dotted", col="darkgreen", lwd=2) 
