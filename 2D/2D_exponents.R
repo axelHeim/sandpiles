@@ -78,6 +78,9 @@ time_steps <- 5*1e6  # 3*1e7 lasts > 25min with lattice_size=10
 
 lattice <- matrix(0, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
 
+simulation_data <- data.frame(s=numeric(0),t=numeric(0),l=integer(0))
+perturbat_conser <- FALSE  # perturbation conservative (TRUE) or non-conservative (FALSE)
+
 s_values <- c()  # list of avalanche sizes
 t_values <- c()  # list of avalance lifetimes
 l_values <- c()  # list of avalance linear sizes
@@ -98,12 +101,16 @@ for(t in 1:time_steps){
   x_rand <- sample(1:lattice_size, 1) 
   y_rand <- sample(1:lattice_size, 1) 
   
-  lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 2
-  if(x_rand > 1){
-    lattice[x_rand - 1, y_rand] <- lattice[x_rand - 1, y_rand] - 1
-  }
-  if(y_rand > 1){
-    lattice[x_rand, y_rand - 1] <- lattice[x_rand, y_rand - 1] - 1
+  if(perturbat_conser == TRUE){ # conservative perturbation
+    lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 2
+    if(x_rand > 1){
+      lattice[x_rand - 1, y_rand] <- lattice[x_rand - 1, y_rand] - 1
+    }
+    if(y_rand > 1){
+      lattice[x_rand, y_rand - 1] <- lattice[x_rand, y_rand - 1] - 1
+    }
+  } else { # non-conservative perturbation
+    lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 1
   }
   
   
@@ -190,4 +197,9 @@ summary(linearMod_l)
 
 plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
 abline(linearMod_l)
+
+
+
+
+
 

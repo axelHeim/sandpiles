@@ -59,15 +59,18 @@ perform_avalanches <- function(lattice){
 #### algorithm  
 library(plot.matrix)
 lattice_size <- 15
-z_crit <- 8      # avalanche condtion
-time_steps <- 3*1e4  # 3*1e7 lasts > 25min with lattice_size=10
+time_steps <- 0.5*1e5  # 3*1e7 lasts > 25min with lattice_size=10
 plotting <- F
 
-z_crit_max <- 6
-color <- c("green4","blue4","red2","orange2","pink2")
 
+perturbat_conser <- FALSE  # perturbation conservative (TRUE) or non-conservative (FALSE)
 
-for(z_crit in z_crit_max:1){
+color <- c("green4","blue4","red2")
+
+z_crit_max <- 100
+i <- 1
+
+for(z_crit in c(z_crit_max, 75, 50, 10)){
   
   lattice <- matrix(0L, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
   z_means <- numeric(time_steps)
@@ -83,14 +86,17 @@ for(z_crit in z_crit_max:1){
     x_rand <- sample(1:lattice_size, 1) 
     y_rand <- sample(1:lattice_size, 1) 
     
-    lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 2
-    if(x_rand > 1){
-      lattice[x_rand - 1, y_rand] <- lattice[x_rand - 1, y_rand] - 1
+    if(perturbat_conser == TRUE){ # conservative perturbation
+      lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 2
+      if(x_rand > 1){
+        lattice[x_rand - 1, y_rand] <- lattice[x_rand - 1, y_rand] - 1
+      }
+      if(y_rand > 1){
+        lattice[x_rand, y_rand - 1] <- lattice[x_rand, y_rand - 1] - 1
+      }
+    } else { # non-conservative perturbation
+      lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 1
     }
-    if(y_rand > 1){
-      lattice[x_rand, y_rand - 1] <- lattice[x_rand, y_rand - 1] - 1
-    }
-    
     
     ## compute z_mean[t]
     z_means[t] <- mean(lattice)
@@ -106,16 +112,15 @@ for(z_crit in z_crit_max:1){
          ylab = expression(paste("<z(", tau, ")>")))  
   } else {
     lines(z_means)
-    lines(z_means, col=color[z_crit])
+    lines(z_means, col=color[i])
+    i <- i + 1
   }
 }
 
 grid()
-legend(-200, 5, legend=c(expression(paste('z'['crit'], ' = 6')),
-                      expression(paste('z'['crit'], ' = 5')),
-                      expression(paste('z'['crit'], ' = 4')),
-                      expression(paste('z'['crit'], ' = 3')),
-                      expression(paste('z'['crit'], ' = 2')),
-                      expression(paste('z'['crit'], ' = 1'))),
-       col=c("black","pink2","orange2","red2","blue4","green4"), lty=1:1, cex=0.8)
+legend(0, 100, legend=c(expression(paste('z'['crit'], ' = 100')),
+                      expression(paste('z'['crit'], ' = 75')),
+                      expression(paste('z'['crit'], ' = 50')),
+                      expression(paste('z'['crit'], ' = 10'))),
+       col=c("black","green4","blue4","red2"), lty=1:1, cex=0.8)
 

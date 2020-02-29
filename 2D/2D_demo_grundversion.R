@@ -1,5 +1,5 @@
 ### 2D lattice after christen1991 paper
-### open boundary conditions and conservative perturbation
+### open boundary conditions and non-cons. OR conservative perturbation
 
 ### functions:
 
@@ -70,6 +70,9 @@ z_crit <- 8      # avalanche condtion
 time_steps <- 1e6  # 3*1e7 lasts > 25min with lattice_size=10
 plotting <- F
 
+
+perturbat_conser <- FALSE  # perturbation conservative (TRUE) or non-conservative (FALSE)
+
 lattice <- matrix(0L, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
 
 
@@ -86,13 +89,18 @@ for(t in 1:time_steps){
   x_rand <- sample(1:lattice_size, 1) 
   y_rand <- sample(1:lattice_size, 1) 
   
-  lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 2
-  if(x_rand > 1){
-    lattice[x_rand - 1, y_rand] <- lattice[x_rand - 1, y_rand] - 1
+  if(perturbat_conser == TRUE){ # conservative perturbation
+    lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 2
+    if(x_rand > 1){
+      lattice[x_rand - 1, y_rand] <- lattice[x_rand - 1, y_rand] - 1
+    }
+    if(y_rand > 1){
+      lattice[x_rand, y_rand - 1] <- lattice[x_rand, y_rand - 1] - 1
+    }
+  } else { # non-conservative perturbation
+    lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 1
   }
-  if(y_rand > 1){
-    lattice[x_rand, y_rand - 1] <- lattice[x_rand, y_rand - 1] - 1
-  }
+  
   
   ## final avalance relaxation
   if(t == time_steps){
@@ -102,6 +110,7 @@ for(t in 1:time_steps){
   if(t %% 1e5 == 0){
     print("% steps done:")
     print(t/time_steps * 100)
+    print(c("<z>",mean(lattice)))
   }
 }
 
