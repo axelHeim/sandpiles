@@ -30,7 +30,7 @@ perform_avalanches <- function(lattice){
         if(lattice[i,j] > z_crit){
           
           actual_lin_dis <- sqrt((i - r_0[1])^2 + (j - r_0[2])^2)# distance between r_0 actual critical point
-          avalance_lin_size <- max(avalance_lin_size, actual_lin_dis)
+          avalance_lin_size <- max(1, max(avalance_lin_size, actual_lin_dis))
           
 
           tmp_lattice[i,j] <- tmp_lattice[i,j] - 4
@@ -72,18 +72,15 @@ perform_avalanches <- function(lattice){
 
 #### algorithm  
 library(plot.matrix)
-lattice_size <- 40
+lattice_size <- 10 #40
 z_crit <- 8      # avalanche condtion
-time_steps <- 5*1e6  # 3*1e7 lasts > 25min with lattice_size=10
+time_steps <- 1e4 # 5*1e6  # 3*1e7 lasts > 25min with lattice_size=10
 
 lattice <- matrix(0, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
 
 simulation_data <- data.frame(s=numeric(0),t=numeric(0),l=integer(0))
-perturbat_conser <- FALSE  # perturbation conservative (TRUE) or non-conservative (FALSE)
 
-s_values <- c()  # list of avalanche sizes
-t_values <- c()  # list of avalance lifetimes
-l_values <- c()  # list of avalance linear sizes
+perturbat_conser <- FALSE  # perturbation conservative (TRUE) or non-conservative (FALSE)
 
 
 for(t in 1:time_steps){
@@ -91,10 +88,10 @@ for(t in 1:time_steps){
   lattice <- matrix(tmp[1:lattice_size^2], nrow = lattice_size, ncol = lattice_size)
   
   if(tmp[lattice_size^2 + 1] > 0){   # this cond. checks whether there was an avalanche at all
-    s_values[[length(s_values) + 1]] <- tmp[lattice_size^2 + 1]  
-    t_values[[length(t_values) + 1]] <- tmp[lattice_size^2 + 2] 
-    l_values[[length(l_values) + 1]] <- tmp[lattice_size^2 + 3]  
-  }
+    simulation_data <- rbind(simulation_data, data.frame(s=tmp[lattice_size^2 + 1],
+                                                         t=tmp[lattice_size^2 + 2],
+                                                         l=tmp[lattice_size^2 + 3]))
+    }
   
   
   ## randomly place one grain of sand by z<-z+1 on random pos.
@@ -136,21 +133,21 @@ for(t in 1:time_steps){
 ## plotting
 
 
-table(s_values)
-hist(s_values, probability = TRUE)
-max(s_values)
+table(simulation_data$s)
+hist(simulation_data$s, probability = TRUE)
+max(simulation_data$s)
 
-table(t_values)
-hist(t_values)
-max(t_values)
+table(simulation_data$t)
+hist(simulation_data$t)
+max(simulation_data$t)
 
-table(l_values)
-hist(l_values)  
-max(l_values)
+table(simulation_data$l)
+hist(simulation_data$l)  
+max(simulation_data$l)
 
-plot(density(s_values, from = 1, to = 600), log = 'xy')
-plot(density(t_values, bw = .5, from = 1, to = 100), log = 'xy')
-plot(density(l_values, bw= 0.3), log = 'xy')
+plot(density(simulation_data$s, from = 1, to = 600), log = 'xy')
+plot(density(simulation_data$t, bw = .5, from = 1, to = 100), log = 'xy')
+plot(density(simulation_data$l, bw= 0.3), log = 'xy')
 
 
 
@@ -161,22 +158,22 @@ plot(density(l_values, bw= 0.3), log = 'xy')
 
 
 ### t
-t_dataFrame <- as.data.frame(table(t_values))
-t_dataFrame$log10_T <- log10(as.numeric(as.character(t_dataFrame$t_values))) # transformation necessary because these values were "factors" before
-t_dataFrame$prob <- t_dataFrame$Freq / length(t_values)
+t_dataFrame <- as.data.frame(table(simulation_data$t))
+t_dataFrame$log10_T <- log10(as.numeric(as.character(t_dataFrame$Var1))) # transformation necessary because these values were "factors" before
+t_dataFrame$prob <- t_dataFrame$Freq / sum(t_dataFrame$Freq)
 t_dataFrame$log10_prob  <- log10(t_dataFrame$prob)
 
 linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame) # , subset=0:4
 summary(linearMod_t)
 
-plot(t_dataFrame$log10_T, t_dataFrame$log10_prob) # , xlim = c(0,4)
+plot(t_dataFrame$log10_T, t_dataFrame$log10_prob, type = 'l') # , xlim = c(0,4)
 abline(linearMod_t)
 
 
 ### s
-s_dataFrame <- as.data.frame(table(s_values))
-s_dataFrame$log10_s <- log10(as.numeric(as.character(s_dataFrame$s_values))) # transformation necessary because these values were "factors" before
-s_dataFrame$prob <- s_dataFrame$Freq / length(s_values)
+s_dataFrame <- as.data.frame(table(simulation_data$s))
+s_dataFrame$log10_s <- log10(as.numeric(as.character(s_dataFrame$Var1))) # transformation necessary because these values were "factors" before
+s_dataFrame$prob <- s_dataFrame$Freq / sum(s_dataFrame$Freq)
 s_dataFrame$log10_prob  <- log10(s_dataFrame$prob)
 
 linearMod_s <- lm(log10_prob ~ log10_s, data=s_dataFrame) # , subset=0:4
@@ -186,10 +183,9 @@ plot(s_dataFrame$log10_s, s_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
 abline(linearMod_s)
 
 ### l
-l_dataFrame <- as.data.frame(table(l_values))
-l_dataFrame$l_shifted <- as.numeric(as.character(l_dataFrame$l_values)) + 1  # shift l by one in order to be able to get log values
-l_dataFrame$log10_l <- log10(l_dataFrame$l_shifted) # transformation necessary because these values were "factors" before
-l_dataFrame$prob <- l_dataFrame$Freq / length(l_values)
+l_dataFrame <- as.data.frame(table(simulation_data$l))
+l_dataFrame$log10_l <- log10(as.numeric(as.character(l_dataFrame$Var1))) # transformation necessary because these values were "factors" before
+l_dataFrame$prob <- l_dataFrame$Freq / sum(l_dataFrame$Freq)
 l_dataFrame$log10_prob  <- log10(l_dataFrame$prob)
 
 linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame) # , subset=0:4
@@ -200,6 +196,13 @@ abline(linearMod_l)
 
 
 
+#### conditional expectation values
 
+# conditional on s:
+cond_on_s <- data.frame(s=numeric(0),E_t_on_s=numeric(0),E_l_on_s=integer(0))
+
+
+#rbind(simulation_data, data.frame(s=tmp[lattice_size^2 + 1],
+                                  
 
 
