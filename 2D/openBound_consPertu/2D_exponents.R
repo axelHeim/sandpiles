@@ -178,3 +178,16 @@ summary(linearMod_s)
 plot(s_dataFrame$log10_s, s_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
 abline(linearMod_s)
 
+### l
+l_dataFrame <- as.data.frame(table(l_values))
+l_dataFrame$l_shifted <- as.numeric(as.character(l_dataFrame$l_values)) + 1  # shift l by one in order to be able to get log values
+l_dataFrame$log10_l <- log10(l_dataFrame$l_shifted) # transformation necessary because these values were "factors" before
+l_dataFrame$prob <- l_dataFrame$Freq / length(l_values)
+l_dataFrame$log10_prob  <- log10(l_dataFrame$prob)
+
+linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame) # , subset=0:4
+summary(linearMod_l)
+
+plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
+abline(linearMod_l)
+
