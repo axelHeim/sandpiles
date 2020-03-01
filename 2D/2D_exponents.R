@@ -163,7 +163,7 @@ t_dataFrame$log10_T <- log10(as.numeric(as.character(t_dataFrame$Var1))) # trans
 t_dataFrame$prob <- t_dataFrame$Freq / sum(t_dataFrame$Freq)
 t_dataFrame$log10_prob  <- log10(t_dataFrame$prob)
 
-linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame) # , subset=0:4
+linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame, subset=(log10_T < 1.5))
 summary(linearMod_t)
 
 plot(t_dataFrame$log10_T, t_dataFrame$log10_prob, type = 'l') # , xlim = c(0,4)
@@ -176,7 +176,7 @@ s_dataFrame$log10_s <- log10(as.numeric(as.character(s_dataFrame$Var1))) # trans
 s_dataFrame$prob <- s_dataFrame$Freq / sum(s_dataFrame$Freq)
 s_dataFrame$log10_prob  <- log10(s_dataFrame$prob)
 
-linearMod_s <- lm(log10_prob ~ log10_s, data=s_dataFrame) # , subset=0:4
+linearMod_s <- lm(log10_prob ~ log10_s, data=s_dataFrame, subset=(log10_s < 2.3)) # , subset=0:4
 summary(linearMod_s)
 
 plot(s_dataFrame$log10_s, s_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
@@ -188,10 +188,10 @@ l_dataFrame$log10_l <- log10(as.numeric(as.character(l_dataFrame$Var1))) # trans
 l_dataFrame$prob <- l_dataFrame$Freq / sum(l_dataFrame$Freq)
 l_dataFrame$log10_prob  <- log10(l_dataFrame$prob)
 
-linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame, subset=(log10_l < 1.2)) # , subset=(SIZE>0.8 & SIZE<7)
+linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame, subset=(log10_l < 1.3)) # , subset=(SIZE>0.8 & SIZE<7)
 summary(linearMod_l)
 
-plot(l_dataFrame$log10_l, l_dataFrame$log10_prob)#, type = "l") # , xlim = c(0,4)
+plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
 abline(linearMod_l)
 
 
@@ -204,5 +204,19 @@ cond_on_s <- data.frame(s=numeric(0),E_t_on_s=numeric(0),E_l_on_s=integer(0))
 
 #rbind(simulation_data, data.frame(s=tmp[lattice_size^2 + 1],
                                   
+s_t_table <- table(simulation_data$s, simulation_data$t) # t sind so spalten und s reihen in table
+s_l_table <- table(simulation_data$s, simulation_data$l)
 
+distinct_t  <- sort(unique(simulation_data$t))
+distinct_s  <- sort(unique(simulation_data$s))
+distinct_l  <- sort(unique(simulation_data$l))
 
+for (s_ in as.character(distinct_s)) {
+
+  E_t_on_s_ <- sum(distinct_t * s_t_table[s_,]/sum(s_t_table[s_,]))
+  E_l_on_s_ <- sum(distinct_l * s_l_table[s_,]/sum(s_l_table[s_,]))
+  
+  cond_on_s <- rbind(cond_on_s, 
+                     data.frame(s=s_, E_t_on_s=E_t_on_s_ ,E_l_on_s=E_l_on_s_))
+}
+                   
