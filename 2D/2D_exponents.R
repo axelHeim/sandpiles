@@ -72,15 +72,15 @@ perform_avalanches <- function(lattice){
 
 #### algorithm  
 library(plot.matrix)
-lattice_size <- 10 #40
+lattice_size <- 40
 z_crit <- 8      # avalanche condtion
-time_steps <- 1e4 # 5*1e6  # 3*1e7 lasts > 25min with lattice_size=10
+time_steps <- 5*1e6  # 3*1e7 lasts > 25min with lattice_size=10
 
 lattice <- matrix(0, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
 
 simulation_data <- data.frame(s=numeric(0),t=numeric(0),l=integer(0))
 
-perturbat_conser <- FALSE  # perturbation conservative (TRUE) or non-conservative (FALSE)
+perturbat_conser <- TRUE  # perturbation conservative (TRUE) or non-conservative (FALSE)
 
 
 for(t in 1:time_steps){
@@ -111,7 +111,7 @@ for(t in 1:time_steps){
   }
   
   
-  if(t %% 1e5 == 0){
+  if(t %% 1e4 == 0){
     print(c(t/time_steps * 100, "% steps done", 
             "<z>", mean(lattice)))
   }
@@ -188,10 +188,10 @@ l_dataFrame$log10_l <- log10(as.numeric(as.character(l_dataFrame$Var1))) # trans
 l_dataFrame$prob <- l_dataFrame$Freq / sum(l_dataFrame$Freq)
 l_dataFrame$log10_prob  <- log10(l_dataFrame$prob)
 
-linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame) # , subset=0:4
+linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame, subset=(log10_l < 1.2)) # , subset=(SIZE>0.8 & SIZE<7)
 summary(linearMod_l)
 
-plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
+plot(l_dataFrame$log10_l, l_dataFrame$log10_prob)#, type = "l") # , xlim = c(0,4)
 abline(linearMod_l)
 
 
