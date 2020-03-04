@@ -130,3 +130,9 @@ for(t in 1:time_steps){
   
 }
 
+
+###
+
+library(random)
+randNumbers <- randomNumbers(n = 1e4, min = 1, max = lattice_size)
+randNumbers[1]
