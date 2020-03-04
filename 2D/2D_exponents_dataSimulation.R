@@ -72,14 +72,14 @@ perform_avalanches <- function(lattice){
 
 #### algorithm  
 library(plot.matrix)
-library(random)
+library(randtoolbox)
 
 lattice_size <- 40
 z_crit <- 8      # avalanche condtion
-time_steps <- 1e4  # 3*1e7 lasts > 25min with lattice_size=10
+time_steps <- 1e7  # 3*1e7 lasts > 25min with lattice_size=10
 
 lattice <- matrix(0, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
-random_gen_choice <- 2 # 1= std. sample(); 2= random package real random numbers
+random_gen_choice <- 1 # 1= std. sample(); 2= random package real random numbers
 
 
 perturbat_conser <- TRUE  # perturbation conservative (TRUE) or non-conservative (FALSE)
@@ -89,9 +89,6 @@ s_values <- c()  # list of avalanche sizes
 t_values <- c()  # list of avalance lifetimes
 l_values <- c()  # list of avalance linear sizes
 
-#initial drawing of random numbers for perturbation
-randNumbers_y <- randomNumbers(n = 1e4, min = 1, max = lattice_size) # kann nur 10^4 zahlen aufeinmal abrufen
-randNumbers_x <- randomNumbers(n = 1e4, min = 1, max = lattice_size) # kann nur 10^4 zahlen aufeinmal abrufen
 
 for(t in 1:time_steps){
   tmp <- perform_avalanches(lattice)
@@ -105,19 +102,8 @@ for(t in 1:time_steps){
   
   #### randomly place one grain of sand by z<-z+1 on random pos.
   
-  # choose random numbers via chosen method
-  if(random_gen_choice == 1){
-    x_rand <- sample(1:lattice_size, 1) 
-    y_rand <- sample(1:lattice_size, 1) 
-  } else if (random_gen_choice == 2){
-    x_rand <- randNumbers_x[t] 
-    y_rand <- randNumbers_y[t] 
-    
-    if ((t %% 1e4) == 0){ # draw new random numbers
-      randNumbers_x <- randomNumbers(n = 1e4, min = 1, max = lattice_size) # kann nur 10^4 zahlen aufeinmal abrufen
-      randNumbers_y <- randomNumbers(n = 1e4, min = 1, max = lattice_size) # kann nur 10^4 zahlen aufeinmal abrufen
-    }
-  } 
+  x_rand <- sample(1:lattice_size, 1) 
+  y_rand <- sample(1:lattice_size, 1) 
   
   if(perturbat_conser == TRUE){ # conservative perturbation
     lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 2
