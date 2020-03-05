@@ -82,7 +82,7 @@ lattice <- matrix(0, nrow = lattice_size, ncol = lattice_size)     # the main la
 random_gen_choice <- 1 # 1= std. sample(); 2= random package real random numbers
 
 
-perturbat_conser <- TRUE  # perturbation conservative (TRUE) or non-conservative (FALSE)
+perturbat_conser <- FALSE  # perturbation conservative (TRUE) or non-conservative (FALSE)
 
 
 s_values <- c()  # list of avalanche sizes
