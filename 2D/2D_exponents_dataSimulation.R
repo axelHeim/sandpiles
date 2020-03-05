@@ -30,6 +30,10 @@ perform_avalanches <- function(lattice){
         if(lattice[i,j] > z_crit){
           
           actual_lin_dis <- sqrt((i - r_0[1])^2 + (j - r_0[2])^2)# distance between r_0 actual critical point
+          
+          # 1 is min. lin size; 1.21 ist min. size wenn s = 2 
+          if(avalanche_size > 1 & actual_lin_dis < 1.21) {actual_lin_dis = 1.21}
+
           avalance_lin_size <- max(1, max(avalance_lin_size, actual_lin_dis))
           
 
