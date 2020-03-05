@@ -77,6 +77,9 @@ plot(t_dataFrame$log10_T, t_dataFrame$log10_prob, type = , col = "green4", pch =
 abline(linearMod_t)
 
 
+#eq = function(x){return(-1.478*x -0.3)}
+#lines(0:3,eq(0:3), type='l')
+
 ###########
 ### l
 ###########
