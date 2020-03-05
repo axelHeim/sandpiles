@@ -30,7 +30,7 @@ perform_avalanches <- function(lattice){
         if(lattice[i,j] > z_crit){
           
           actual_lin_dis <- sqrt((i - r_0[1])^2 + (j - r_0[2])^2)# distance between r_0 actual critical point
-          avalance_lin_size <- max(0.1, max(avalance_lin_size, actual_lin_dis))
+          avalance_lin_size <- max(1, max(avalance_lin_size, actual_lin_dis))
           
 
           tmp_lattice[i,j] <- tmp_lattice[i,j] - 4

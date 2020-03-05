@@ -2,15 +2,15 @@
 ## plotting
 
 
-table(simulation_data$s)
+#table(simulation_data$s)
 hist(simulation_data$s, probability = TRUE)
 max(simulation_data$s)
 
-table(simulation_data$t)
+#table(simulation_data$t)
 hist(simulation_data$t)
 max(simulation_data$t)
 
-table(simulation_data$l)
+#table(simulation_data$l)
 hist(simulation_data$l)  
 max(simulation_data$l)
 
