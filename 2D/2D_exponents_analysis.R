@@ -43,7 +43,7 @@ for (i in 1:ceiling(max(s_dataFrame$log10_s))) {
 
 # fitting and plotting
 linearMod_s <- lm(log10_prob ~ log10_s, data=s_dataFrame, 
-                  subset=(log10_s < 2.5),weights = weights_s)
+                  subset=(log10_s < 2.1),weights = weights_s)
 summary(linearMod_s)
 
 plot(s_dataFrame$log10_s, s_dataFrame$log10_prob, type = , col = "green4", pch = 18,
@@ -68,7 +68,7 @@ for (i in 1:ceiling(max(t_dataFrame$log10_T))) {
 
 # fitting and plotting
 linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame, 
-                  subset=(log10_T < 1.75),
+                  subset=(log10_T < 1.5),
                   weights = weights_t)
 summary(linearMod_t)
 
@@ -95,7 +95,7 @@ for (i in 1:ceiling(max(l_dataFrame$log10_l))) {
 
 # fitting and plotting
 linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame, 
-                  subset=(log10_l < 1.1), weights = weights_l)
+                  subset=(log10_l < 1), weights = weights_l)
 summary(linearMod_l)
 
 plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = , col = "green4", pch = 18,
@@ -171,7 +171,7 @@ cond_on_s$log10_E_l_on_s <- log10(cond_on_s$E_l_on_s)
 
 # E(t | S=s)
 linearMod_E_s_1 <- lm(log10_E_t_on_s ~ log10_s, data=cond_on_s, 
-                      subset=(log10_s < 3),
+                      subset=(log10_s < 2.5),
                       weights = weights_s)
 summary(linearMod_E_s_1)
 plot(cond_on_s$log10_s, cond_on_s$log10_E_t_on_s, type = , col = "green4", pch = 18,
@@ -180,7 +180,7 @@ abline(linearMod_E_s_1)
 
 # E(l | S=s)
 linearMod_E_s_2 <- lm(log10_E_l_on_s ~ log10_s, data=cond_on_s
-                      , subset=(log10_s < 2.8), 
+                      , subset=(log10_s < 2), 
                       weights = weights_s)
 summary(linearMod_E_s_2)
 plot(cond_on_s$log10_s, cond_on_s$log10_E_l_on_s, type = , col = "green4", pch = 18,
@@ -195,7 +195,7 @@ cond_on_t$log10_E_l_on_t <- log10(cond_on_t$E_l_on_t)
 
 # E(s | T=t)
 linearMod_E_t_1 <- lm(log10_E_s_on_t ~ log10_t, data=cond_on_t, 
-                      subset=(log10_t < 2.25),
+                      subset=(log10_t < 2.1),
                       weights = weights_t)
 summary(linearMod_E_t_1)
 plot(cond_on_t$log10_t, cond_on_t$log10_E_s_on_t, type = , col = "green4", pch = 18,
@@ -204,7 +204,7 @@ abline(linearMod_E_t_1)
 
 # E(l | T=t)
 linearMod_E_t_2 <- lm(log10_E_l_on_t ~ log10_t, data=cond_on_t
-                      , subset=(log10_t < 1.8), weights = weights_t)
+                      , subset=(log10_t < 1.6), weights = weights_t)
 summary(linearMod_E_t_2)
 plot(cond_on_t$log10_t, cond_on_t$log10_E_l_on_t, type = , col = "green4", pch = 18,
      xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], '(E(L|T=t))')))
@@ -218,7 +218,7 @@ cond_on_l$log10_E_t_on_l <- log10(cond_on_l$E_t_on_l)
 
 # E(s | L=l)
 linearMod_E_l_1 <- lm(log10_E_s_on_l ~ log10_l, data=cond_on_l, 
-                      subset=(log10_l < 1.2)
+                      subset=(log10_l < 1.3)
                       , weights = weights_l)
 summary(linearMod_E_l_1)
 plot(cond_on_l$log10_l, cond_on_l$log10_E_s_on_l, type = , col = "green4", pch = 18,
@@ -228,7 +228,7 @@ abline(linearMod_E_l_1)
 
 # E(t | L=l)
 linearMod_E_l_2 <- lm(log10_E_t_on_l ~ log10_l, data=cond_on_l
-                      , subset=( log10_l < 1.2), weights = weights_l)
+                      , subset=( log10_l < 1.4), weights = weights_l)
 summary(linearMod_E_l_2)
 plot(cond_on_l$log10_l, cond_on_l$log10_E_t_on_l,type = , col = "green4", pch = 18,
      xlab = expression(paste('log'['10'], '(l)')), ylab = expression(paste('log'['10'], '(E(T|L=l))')))
