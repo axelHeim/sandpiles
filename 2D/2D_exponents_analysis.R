@@ -134,7 +134,7 @@ cond_on_s$log10_E_l_on_s <- log10(cond_on_s$E_l_on_s)
 linearMod_E_s_1 <- lm(log10_E_t_on_s ~ log10_s, data=cond_on_s, subset=(log10_s < 2.2))
 summary(linearMod_E_s_1)
 plot(cond_on_s$log10_s, cond_on_s$log10_E_t_on_s, type = , col = "green4", pch = 18,
-     xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], 'E(T|S=s)')))
+     xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], '(E(T|S=s))')))
 abline(linearMod_E_s_1)
 
 # E(l | S=s)
@@ -142,7 +142,7 @@ linearMod_E_s_2 <- lm(log10_E_l_on_s ~ log10_s, data=cond_on_s
                       , subset=(log10_s > 0.3 & log10_s < 2.1))
 summary(linearMod_E_s_2)
 plot(cond_on_s$log10_s, cond_on_s$log10_E_l_on_s, type = , col = "green4", pch = 18,
-     xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], 'E(L|S=s)'))) 
+     xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], '(E(L|S=s))'))) 
 abline(linearMod_E_s_2)
 
 ##############
@@ -155,7 +155,7 @@ cond_on_t$log10_E_l_on_t <- log10(cond_on_t$E_l_on_t)
 linearMod_E_t_1 <- lm(log10_E_s_on_t ~ log10_t, data=cond_on_t, subset=(log10_t < 2.0))
 summary(linearMod_E_t_1)
 plot(cond_on_t$log10_t, cond_on_t$log10_E_s_on_t, type = , col = "green4", pch = 18,
-     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], 'E(S|T=t)')))
+     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], '(E(S|T=t))')))
 abline(linearMod_E_t_1)
 
 # E(l | T=t)
@@ -163,7 +163,7 @@ linearMod_E_t_2 <- lm(log10_E_l_on_t ~ log10_t, data=cond_on_t
                       , subset=(log10_t > 0.3 & log10_t < 1.55))
 summary(linearMod_E_t_2)
 plot(cond_on_t$log10_t, cond_on_t$log10_E_l_on_t, type = , col = "green4", pch = 18,
-     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], 'E(L|T=t)')))
+     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], '(E(L|T=t))')))
 abline(linearMod_E_t_2)
 
 ###############
@@ -175,14 +175,17 @@ cond_on_l$log10_E_t_on_l <- log10(cond_on_l$E_t_on_l)
 # E(s | L=l)
 linearMod_E_l_1 <- lm(log10_E_s_on_l ~ log10_l, data=cond_on_l, subset=(log10_l < 1.3))
 summary(linearMod_E_l_1)
-plot(cond_on_l$log10_l, cond_on_l$log10_E_s_on_l, col = "green4", type = "l") # , xlim = c(0,4)
+plot(cond_on_l$log10_l, cond_on_l$log10_E_s_on_l, type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(l)')), ylab = expression(paste('log'['10'], '(E(S|L=l))')))
 abline(linearMod_E_l_1)
+
 
 # E(t | L=l)
 linearMod_E_l_2 <- lm(log10_E_t_on_l ~ log10_l, data=cond_on_l
                       , subset=( log10_l < 1.4))
 summary(linearMod_E_l_2)
-plot(cond_on_l$log10_l, cond_on_l$log10_E_t_on_l, col = "green4")#, type = "l") # , xlim = c(0,4)
+plot(cond_on_l$log10_l, cond_on_l$log10_E_t_on_l,type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(l)')), ylab = expression(paste('log'['10'], '(E(T|L=l))')))
 abline(linearMod_E_l_2)
 
 
