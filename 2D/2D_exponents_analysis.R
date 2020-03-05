@@ -30,7 +30,7 @@ t_dataFrame$log10_T <- log10(as.numeric(as.character(t_dataFrame$Var1))) # trans
 t_dataFrame$prob <- t_dataFrame$Freq / sum(t_dataFrame$Freq)
 t_dataFrame$log10_prob  <- log10(t_dataFrame$prob)
 
-linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame, subset=(log10_T < 1.6))
+linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame, subset=(log10_T < 1.75))
 summary(linearMod_t)
 
 plot(t_dataFrame$log10_T, t_dataFrame$log10_prob, type = , col = "green4", pch = 18,
@@ -43,7 +43,7 @@ s_dataFrame$log10_s <- log10(as.numeric(as.character(s_dataFrame$Var1))) # trans
 s_dataFrame$prob <- s_dataFrame$Freq / sum(s_dataFrame$Freq)
 s_dataFrame$log10_prob  <- log10(s_dataFrame$prob)
 
-linearMod_s <- lm(log10_prob ~ log10_s, data=s_dataFrame, subset=(log10_s < 2.3)) # , subset=0:4
+linearMod_s <- lm(log10_prob ~ log10_s, data=s_dataFrame, subset=(log10_s < 2.5)) # , subset=0:4
 summary(linearMod_s)
 
 plot(s_dataFrame$log10_s, s_dataFrame$log10_prob, type = , col = "green4", pch = 18,
@@ -56,7 +56,7 @@ l_dataFrame$log10_l <- log10(as.numeric(as.character(l_dataFrame$Var1))) # trans
 l_dataFrame$prob <- l_dataFrame$Freq / sum(l_dataFrame$Freq)
 l_dataFrame$log10_prob  <- log10(l_dataFrame$prob)
 
-linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame, subset=(log10_l < 1.3)) # , subset=(SIZE>0.8 & SIZE<7)
+linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame, subset=(log10_l < 1.1)) # , subset=(SIZE>0.8 & SIZE<7)
 summary(linearMod_l)
 
 plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = , col = "green4", pch = 18,
@@ -173,7 +173,7 @@ cond_on_l$log10_E_s_on_l <- log10(cond_on_l$E_s_on_l)
 cond_on_l$log10_E_t_on_l <- log10(cond_on_l$E_t_on_l)
 
 # E(s | L=l)
-linearMod_E_l_1 <- lm(log10_E_s_on_l ~ log10_l, data=cond_on_l, subset=(log10_l < 1.3))
+linearMod_E_l_1 <- lm(log10_E_s_on_l ~ log10_l, data=cond_on_l, subset=(log10_l < 1.25))
 summary(linearMod_E_l_1)
 plot(cond_on_l$log10_l, cond_on_l$log10_E_s_on_l, type = , col = "green4", pch = 18,
      xlab = expression(paste('log'['10'], '(l)')), ylab = expression(paste('log'['10'], '(E(S|L=l))')))
@@ -182,7 +182,7 @@ abline(linearMod_E_l_1)
 
 # E(t | L=l)
 linearMod_E_l_2 <- lm(log10_E_t_on_l ~ log10_l, data=cond_on_l
-                      , subset=( log10_l < 1.4))
+                      , subset=( log10_l < 1.2))
 summary(linearMod_E_l_2)
 plot(cond_on_l$log10_l, cond_on_l$log10_E_t_on_l,type = , col = "green4", pch = 18,
      xlab = expression(paste('log'['10'], '(l)')), ylab = expression(paste('log'['10'], '(E(T|L=l))')))
