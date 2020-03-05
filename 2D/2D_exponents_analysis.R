@@ -1,3 +1,4 @@
+par(mar=c(5,5,4,1)+.1) # zum setzen der plot maße, wichtig wegen axis labels
 
 ## plotting
 
@@ -29,12 +30,12 @@ t_dataFrame$log10_T <- log10(as.numeric(as.character(t_dataFrame$Var1))) # trans
 t_dataFrame$prob <- t_dataFrame$Freq / sum(t_dataFrame$Freq)
 t_dataFrame$log10_prob  <- log10(t_dataFrame$prob)
 
-linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame, subset=(log10_T < 1.9))
+linearMod_t <- lm(log10_prob ~ log10_T, data=t_dataFrame, subset=(log10_T < 1.6))
 summary(linearMod_t)
 
-plot(t_dataFrame$log10_T, t_dataFrame$log10_prob, type = 'l') # , xlim = c(0,4)
+plot(t_dataFrame$log10_T, t_dataFrame$log10_prob, type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], 'P(T=t)')))
 abline(linearMod_t)
-
 
 ### s
 s_dataFrame <- as.data.frame(table(simulation_data$s))
@@ -45,7 +46,8 @@ s_dataFrame$log10_prob  <- log10(s_dataFrame$prob)
 linearMod_s <- lm(log10_prob ~ log10_s, data=s_dataFrame, subset=(log10_s < 2.3)) # , subset=0:4
 summary(linearMod_s)
 
-plot(s_dataFrame$log10_s, s_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
+plot(s_dataFrame$log10_s, s_dataFrame$log10_prob, type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], 'P(S=s)'))) 
 abline(linearMod_s)
 
 ### l
@@ -57,7 +59,8 @@ l_dataFrame$log10_prob  <- log10(l_dataFrame$prob)
 linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame, subset=(log10_l < 1.3)) # , subset=(SIZE>0.8 & SIZE<7)
 summary(linearMod_l)
 
-plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = "l") # , xlim = c(0,4)
+plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], 'P(T=t)'))) # , xlim = c(0,4)
 abline(linearMod_l)
 
 
@@ -128,16 +131,18 @@ cond_on_s$log10_E_t_on_s <- log10(cond_on_s$E_t_on_s)
 cond_on_s$log10_E_l_on_s <- log10(cond_on_s$E_l_on_s)
 
 # E(t | S=s)
-linearMod_E_s_1 <- lm(log10_E_t_on_s ~ log10_s, data=cond_on_s, subset=(log10_s < 3.0))
+linearMod_E_s_1 <- lm(log10_E_t_on_s ~ log10_s, data=cond_on_s, subset=(log10_s < 2.2))
 summary(linearMod_E_s_1)
-plot(cond_on_s$log10_s, cond_on_s$log10_E_t_on_s, type = "l", col = "green4") 
+plot(cond_on_s$log10_s, cond_on_s$log10_E_t_on_s, type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], 'E(T|S=s)')))
 abline(linearMod_E_s_1)
 
 # E(l | S=s)
 linearMod_E_s_2 <- lm(log10_E_l_on_s ~ log10_s, data=cond_on_s
-                      , subset=(log10_s > 0.3 & log10_s < 2.8))
+                      , subset=(log10_s > 0.3 & log10_s < 2.1))
 summary(linearMod_E_s_2)
-plot(cond_on_s$log10_s, cond_on_s$log10_E_l_on_s, col = "green4", type = "l") 
+plot(cond_on_s$log10_s, cond_on_s$log10_E_l_on_s, type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], 'E(L|S=s)'))) 
 abline(linearMod_E_s_2)
 
 ##############
@@ -147,16 +152,18 @@ cond_on_t$log10_E_s_on_t <- log10(cond_on_t$E_s_on_t)
 cond_on_t$log10_E_l_on_t <- log10(cond_on_t$E_l_on_t)
 
 # E(s | T=t)
-linearMod_E_t_1 <- lm(log10_E_s_on_t ~ log10_t, data=cond_on_t, subset=(log10_t < 2.5))
+linearMod_E_t_1 <- lm(log10_E_s_on_t ~ log10_t, data=cond_on_t, subset=(log10_t < 2.0))
 summary(linearMod_E_t_1)
-plot(cond_on_t$log10_t, cond_on_t$log10_E_s_on_t, type = "l", col = "green4")
+plot(cond_on_t$log10_t, cond_on_t$log10_E_s_on_t, type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], 'E(S|T=t)')))
 abline(linearMod_E_t_1)
 
 # E(l | T=t)
 linearMod_E_t_2 <- lm(log10_E_l_on_t ~ log10_t, data=cond_on_t
-                      , subset=(log10_t > 0.3 & log10_t < 1.8))
+                      , subset=(log10_t > 0.3 & log10_t < 1.55))
 summary(linearMod_E_t_2)
-plot(cond_on_t$log10_t, cond_on_t$log10_E_l_on_t, col = "green4", type = "l") 
+plot(cond_on_t$log10_t, cond_on_t$log10_E_l_on_t, type = , col = "green4", pch = 18,
+     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], 'E(L|T=t)')))
 abline(linearMod_E_t_2)
 
 ###############
