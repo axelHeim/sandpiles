@@ -60,7 +60,7 @@ linearMod_l <- lm(log10_prob ~ log10_l, data=l_dataFrame, subset=(log10_l < 1.3)
 summary(linearMod_l)
 
 plot(l_dataFrame$log10_l, l_dataFrame$log10_prob, type = , col = "green4", pch = 18,
-     xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], 'P(T=t)'))) # , xlim = c(0,4)
+     xlab = expression(paste('log'['10'], '(l)')), ylab = expression(paste('log'['10'], 'P(L=l)'))) # , xlim = c(0,4)
 abline(linearMod_l)
 
 
@@ -139,7 +139,7 @@ abline(linearMod_E_s_1)
 
 # E(l | S=s)
 linearMod_E_s_2 <- lm(log10_E_l_on_s ~ log10_s, data=cond_on_s
-                      , subset=(log10_s > 0.3 & log10_s < 2.1))
+                      , subset=(log10_s > 0.3 & log10_s < 2.0))
 summary(linearMod_E_s_2)
 plot(cond_on_s$log10_s, cond_on_s$log10_E_l_on_s, type = , col = "green4", pch = 18,
      xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], '(E(L|S=s))'))) 
