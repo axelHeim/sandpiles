@@ -172,7 +172,7 @@ cond_on_s$log10_s <- log10(cond_on_s$s)
 cond_on_s$log10_E_t_on_s <- log10(cond_on_s$E_t_on_s)
 cond_on_s$log10_E_l_on_s <- log10(cond_on_s$E_l_on_s)
 
-# E(t | S=s)
+# E(t | S=s) 1/gamma1
 linearMod_E_s_1 <- lm(log10_E_t_on_s ~ log10_s, data=cond_on_s, 
                       subset=(log10_s < 2.5),
                       weights = weights_s)
@@ -181,7 +181,7 @@ plot(cond_on_s$log10_s, cond_on_s$log10_E_t_on_s, type = , col = "green4", pch =
      xlab = expression(paste('log'['10'], '(s)')), ylab = expression(paste('log'['10'], '(E(T|S=s))')))
 abline(linearMod_E_s_1)
 
-# E(l | S=s)
+# E(l | S=s) 1/gamma2
 linearMod_E_s_2 <- lm(log10_E_l_on_s ~ log10_s, data=cond_on_s
                       , subset=(log10_s < 2), 
                       weights = weights_s)
@@ -196,7 +196,7 @@ cond_on_t$log10_t <- log10(cond_on_t$t)
 cond_on_t$log10_E_s_on_t <- log10(cond_on_t$E_s_on_t)
 cond_on_t$log10_E_l_on_t <- log10(cond_on_t$E_l_on_t)
 
-# E(s | T=t)
+# E(s | T=t) gamma1
 linearMod_E_t_1 <- lm(log10_E_s_on_t ~ log10_t, data=cond_on_t, 
                       subset=(log10_t < 2.1),
                       weights = weights_t)
@@ -205,7 +205,7 @@ plot(cond_on_t$log10_t, cond_on_t$log10_E_s_on_t, type = , col = "green4", pch =
      xlab = expression(paste('log'['10'], '(t)')), ylab = expression(paste('log'['10'], '(E(S|T=t))')))
 abline(linearMod_E_t_1)
 
-# E(l | T=t)
+# E(l | T=t) 1/gamma3
 linearMod_E_t_2 <- lm(log10_E_l_on_t ~ log10_t, data=cond_on_t
                       , subset=(log10_t < 1.6), weights = weights_t)
 summary(linearMod_E_t_2)
@@ -219,7 +219,7 @@ cond_on_l$log10_l <- log10(cond_on_l$l)
 cond_on_l$log10_E_s_on_l <- log10(cond_on_l$E_s_on_l)
 cond_on_l$log10_E_t_on_l <- log10(cond_on_l$E_t_on_l)
 
-# E(s | L=l)
+# E(s | L=l) gamma2
 linearMod_E_l_1 <- lm(log10_E_s_on_l ~ log10_l, data=cond_on_l, 
                       subset=(log10_l < 1.3)
                       , weights = weights_l)
@@ -229,7 +229,7 @@ plot(cond_on_l$log10_l, cond_on_l$log10_E_s_on_l, type = , col = "green4", pch =
 abline(linearMod_E_l_1)
 
 
-# E(t | L=l)
+# E(t | L=l) gamma3
 linearMod_E_l_2 <- lm(log10_E_t_on_l ~ log10_l, data=cond_on_l
                       , subset=( log10_l < 1.4), weights = weights_l)
 summary(linearMod_E_l_2)
