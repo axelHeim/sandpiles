@@ -78,7 +78,7 @@ perform_avalanches <- function(lattice){
 library(plot.matrix)
 library(randtoolbox)
 
-lattice_size <- 35
+lattice_size <- 45
 z_crit <- 8      # avalanche condtion
 time_steps <- 1e7  # 3*1e7 lasts > 25min with lattice_size=10
 
