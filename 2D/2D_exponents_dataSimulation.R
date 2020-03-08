@@ -2,6 +2,13 @@
 ### open boundary conditions and conservative perturbation
 
 ### functions:
+RANDU <- function(old_X_i , range){ # creates random number via RANDU alg., also displays that on wished range
+  X_i <- (old_X_i * 65539) %% (2**31)
+  random_number <- ceiling(X_i/(2**31 - 1) * range)
+  
+  return (c(random_number, X_i))
+}
+
 perform_avalanches <- function(lattice){
   #print(" ")
   #print("avalanche func start:")
@@ -78,13 +85,13 @@ perform_avalanches <- function(lattice){
 library(plot.matrix)
 library(randtoolbox)
 
-lattice_size <- 45
+lattice_size <- 40
 z_crit <- 8      # avalanche condtion
-time_steps <- 1e7  # 3*1e7 lasts > 25min with lattice_size=10
+time_steps <- 1e7 
 
 lattice <- matrix(0, nrow = lattice_size, ncol = lattice_size)     # the main lattice for the simulation
-random_gen_choice <- 1 # 1= std. sample(); 2= random package real random numbers
-
+USE_RANDU <- TRUE # use RANDU (True) or standard R alg. for random numbers (FALSE)
+RANDU_seed <- 1
 
 perturbat_conser <- TRUE  # perturbation conservative (TRUE) or non-conservative (FALSE)
 
@@ -104,11 +111,21 @@ for(t in 1:time_steps){
     l_values[[length(l_values) + 1]] <- tmp[lattice_size^2 + 3]  
   }
   
+  #### determine random pos.
+  if(USE_RANDU == TRUE){
+    tmp <- RANDU(RANDU_seed, lattice_size)
+    RANDU_seed <- tmp[2]
+    x_rand <- tmp[1]
+    
+    tmp <- RANDU(RANDU_seed, lattice_size)
+    RANDU_seed <- tmp[2]
+    y_rand <- tmp[1]
+  } else {
+    x_rand <- sample(1:lattice_size, 1) 
+    y_rand <- sample(1:lattice_size, 1) 
+  }
+  
   #### randomly place one grain of sand by z<-z+1 on random pos.
-  
-  x_rand <- sample(1:lattice_size, 1) 
-  y_rand <- sample(1:lattice_size, 1) 
-  
   if(perturbat_conser == TRUE){ # conservative perturbation
     lattice[x_rand, y_rand] <- lattice[x_rand, y_rand] + 2
     if(x_rand > 1){
@@ -128,15 +145,17 @@ for(t in 1:time_steps){
   }
   
   
-  #if(t %% 1000 == 0){
-  #  plot(lattice,  breaks=c(0, 1, 2,3,4,5,6,7,8,9), digits = 0)
-  #}
-  
   
   ## final avalance relaxation
   if(t == time_steps){
     lattice <- perform_avalanches(lattice)
   }
+  
+  
+  #if(t %% 1e4 == 0){
+  #  plot(lattice,  breaks=c(0, 1, 2,3,4,5,6,7,8,9), digits = 0)
+  #}
+  
   
   
 }
